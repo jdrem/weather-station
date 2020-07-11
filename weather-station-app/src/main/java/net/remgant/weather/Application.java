@@ -1,6 +1,5 @@
 package net.remgant.weather;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -11,19 +10,18 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
-import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.metamodel.Metamodel;
 import javax.sql.DataSource;
-import java.util.Map;
 
 @SpringBootApplication
 @EnableJpaRepositories(basePackages = "net.remgant.weather.dao")
 @PropertySource("persistence-weather-update.properties")
 public class Application extends SpringBootServletInitializer {
 
-    @Autowired
-    private Environment env;
+    private final Environment env;
+
+    public Application(Environment env) {
+        this.env = env;
+    }
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {

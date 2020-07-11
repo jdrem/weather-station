@@ -4,7 +4,6 @@ import net.remgant.weather.dao.WeatherUpdateRepository;
 import net.remgant.weather.model.WeatherUpdate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +20,11 @@ import java.util.Optional;
 public class WeaterStationController {
     private final static Logger log = LoggerFactory.getLogger(WeaterStationController.class);
 
-    @Autowired
-    WeatherUpdateRepository repository;
+    final WeatherUpdateRepository repository;
+
+    public WeaterStationController(WeatherUpdateRepository repository) {
+        this.repository = repository;
+    }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
