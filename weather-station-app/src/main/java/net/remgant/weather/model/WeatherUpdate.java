@@ -3,7 +3,6 @@ package net.remgant.weather.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.criteria.CriteriaBuilder;
 import java.time.Instant;
 
 @Entity
@@ -78,8 +77,9 @@ public class WeatherUpdate {
 
     @Override
     public String toString() {
-        return "Update{" +
-                "timestamp=" + timestamp +
+        return "WeatherUpdate{" +
+                "Id=" + Id +
+                ", timestamp=" + timestamp +
                 ", tempC=" + tempC +
                 ", tempF=" + tempF +
                 ", humidity=" + humidity +

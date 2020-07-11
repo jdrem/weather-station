@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.criteria.Predicate;
+import java.time.Clock;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,14 +22,17 @@ public class WeaterStationController {
     private final static Logger log = LoggerFactory.getLogger(WeaterStationController.class);
 
     final WeatherUpdateRepository repository;
+    private Clock clock;
 
     public WeaterStationController(WeatherUpdateRepository repository) {
         this.repository = repository;
+        this.clock = Clock.systemUTC();
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void update(@RequestBody WeatherUpdate data) {
+        data.setTimestamp(Instant.now(clock));
         log.info("Got {}", data);
         repository.save(data);
     }
