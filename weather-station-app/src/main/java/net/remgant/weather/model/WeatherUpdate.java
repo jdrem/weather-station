@@ -1,7 +1,17 @@
-package net.remgant.weather;
+package net.remgant.weather.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.criteria.CriteriaBuilder;
+import java.time.Instant;
+
+@Entity
 public class WeatherUpdate {
-    private long timestamp;
+    @javax.persistence.Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long Id;
+    private Instant timestamp;
     private double tempC;
     private double tempF;
     private double humidity;
@@ -10,7 +20,7 @@ public class WeatherUpdate {
     public WeatherUpdate() {
     }
 
-    public WeatherUpdate(long timestamp, double tempF, double tempC, double humidity, double pressure) {
+    public WeatherUpdate(Instant timestamp, double tempF, double tempC, double humidity, double pressure) {
         this.timestamp = timestamp;
         this.tempF = tempF;
         this.tempC = tempC;
@@ -18,11 +28,19 @@ public class WeatherUpdate {
         this.pressure = pressure;
     }
 
-    public long getTimestamp() {
+    public long getId() {
+        return Id;
+    }
+
+    public void setId(long id) {
+        Id = id;
+    }
+
+    public Instant getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(long timestamp) {
+    public void setTimestamp(Instant timestamp) {
         this.timestamp = timestamp;
     }
 
