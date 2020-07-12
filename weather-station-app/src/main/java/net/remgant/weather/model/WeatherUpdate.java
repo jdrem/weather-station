@@ -8,7 +8,7 @@ import java.time.Instant;
 @Entity
 public class WeatherUpdate {
     @javax.persistence.Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long Id;
     private Instant timestamp;
     private double tempC;
