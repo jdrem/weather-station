@@ -32,7 +32,7 @@ export class DataService {
       console.log("result pending, sending o")
       return this.o;
     } else {
-      this.o = this.http.get<WeatherUpdate[]>('/api/data').pipe(
+      this.o = this.http.get<WeatherUpdate[]>('/api/data?size=60').pipe(
         share()
       );
       this.o.subscribe(r => {

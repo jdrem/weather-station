@@ -4,20 +4,24 @@ import {DataService} from "../../services/data.service";
 @Component({
   selector: 'app-current',
   template: `
-    <h3>Current Conditions</h3>
+    <h3 style="text-align:center">Current Conditions</h3>
     <table class="table table-striped">
       <tbody>
       <tr>
-        <td style="text-align:center">Temp</td>
-        <td style="text-align:center">{{t}}</td>
+        <td style="text-align:center">Temp (F)</td>
+        <td style="text-align:center">{{tf+ 0.499 | number:'1.0-0'}}&deg;</td>
+      </tr>
+      <tr>
+        <td style="text-align:center">Temp (C)</td>
+        <td style="text-align:center">{{tc + 0.499 | number:'1.0-0'}}&deg;</td>
       </tr>
       <tr>
         <td style="text-align:center">Humidity</td>
-        <td style="text-align:center">{{h}}</td>
+        <td style="text-align:center">{{h+ 0.499 | number:'1.0-0'}}%</td>
       </tr>
       <tr>
         <td style="text-align:center">Pressure</td>
-        <td style="text-align:center">{{p}}</td>
+        <td style="text-align:center">{{p | number: '1.1-1'}} mbar</td>
       </tr>
       </tbody>
     </table>
@@ -28,14 +32,16 @@ export class CurrentComponent implements OnInit {
 
   constructor(private dataService: DataService) { }
 
-  t;
+  tf;
+  tc;
   h;
   p;
 
   ngOnInit() {
     this.dataService.data().subscribe(a => {
-      this.t = a[0].tempF;
-      this.h = a[0].tempC;
+      this.tf = a[0].tempF;
+      this.tc = a[0].tempC;
+      this.h = a[0].humidity;
       this.p = a[0].pressure;
     })
   }
