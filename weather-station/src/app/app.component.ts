@@ -15,15 +15,14 @@ export class AppComponent {
   l: string[];
   t: number[];
   h: number[];
-  tdata: any;
-  /*tdata: any = <any> {
-    labels: ['11:00', '11:05', '11:10', '11:15', '11:20', '11:25'],
+  tdata: any = <any> {
+    labels: [],
     datasets: [{
       yAxisID: 'A',
       fill: false,
       lineTension: 0,
       label: 'Temperature',
-      data: [28, 29, 32, 33, 30, 27],
+      data: [],
       borderWidth: 3,
       borderColor: 'rgba(255, 99, 132, 1)',
     },
@@ -32,12 +31,11 @@ export class AppComponent {
         fill: false,
         lineTension: 0,
         label: 'Humidity',
-        data: [54, 52, 50, 49, 55, 60],
+        data: [],
         borderWidth: 3,
         borderColor: 'rgba(54, 162, 235, 1)',
       }]
   }
-*/
   options = {
     scales: {
       yAxes: [{
@@ -72,27 +70,9 @@ export class AppComponent {
         this.t.push(b.tempF)
         this.h.push(b.humidity)
       })
-      this.tdata = <any>{
-        labels: this.l,
-        datasets: [{
-          yAxisID: 'A',
-          fill: false,
-          lineTension: 0,
-          label: 'Temperature',
-          data: this.t,
-          borderWidth: 3,
-          borderColor: 'rgba(255, 99, 132, 1)',
-        },
-          {
-            yAxisID: 'B',
-            fill: false,
-            lineTension: 0,
-            label: 'Humidity',
-            data: this.h,
-            borderWidth: 3,
-            borderColor: 'rgba(54, 162, 235, 1)',
-          }]
-      }
+      this.tdata.labels = this.l;
+      this.tdata.datasets[0].data = this.t;
+      this.tdata.datasets[1].data = this.h;
     })
   }
 }
