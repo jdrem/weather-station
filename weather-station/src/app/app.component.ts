@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {DataService} from "./services/data.service";
 import {WeatherUpdate} from "./model/weather-update";
 import {Observable} from "rxjs";
+import {map} from "rxjs/operators";
 
 @Component({
   selector: 'app-root',
@@ -11,8 +12,11 @@ import {Observable} from "rxjs";
 export class AppComponent {
   title = 'weather-station';
   data: Observable<WeatherUpdate[]>;
-
-  tdata: any = <any> {
+  l: string[];
+  t: number[];
+  h: number[];
+  tdata: any;
+  /*tdata: any = <any> {
     labels: ['11:00', '11:05', '11:10', '11:15', '11:20', '11:25'],
     datasets: [{
       yAxisID: 'A',
@@ -33,7 +37,7 @@ export class AppComponent {
         borderColor: 'rgba(54, 162, 235, 1)',
       }]
   }
-
+*/
   options = {
     scales: {
       yAxes: [{
@@ -43,7 +47,7 @@ export class AppComponent {
         ticks: {
           beginAtZero: true
         }
-      },{
+      }, {
         id: 'B',
         type: 'linear',
         position: 'right',
@@ -56,7 +60,39 @@ export class AppComponent {
 
   constructor(private dataService: DataService) {
   }
+
   ngOnInit() {
     this.data = this.dataService.data();
+    this.data.subscribe(a => {
+      this.l = Array.of<string>();
+      this.t = Array.of<number>();
+      this.h = Array.of<number>();
+      a.forEach(b => {
+        this.l.push(b.timestamp.substr(11, 5))
+        this.t.push(b.tempF)
+        this.h.push(b.humidity)
+      })
+      this.tdata = <any>{
+        labels: this.l,
+        datasets: [{
+          yAxisID: 'A',
+          fill: false,
+          lineTension: 0,
+          label: 'Temperature',
+          data: this.t,
+          borderWidth: 3,
+          borderColor: 'rgba(255, 99, 132, 1)',
+        },
+          {
+            yAxisID: 'B',
+            fill: false,
+            lineTension: 0,
+            label: 'Humidity',
+            data: this.h,
+            borderWidth: 3,
+            borderColor: 'rgba(54, 162, 235, 1)',
+          }]
+      }
+    })
   }
 }
