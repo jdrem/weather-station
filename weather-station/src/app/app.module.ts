@@ -9,6 +9,7 @@ import { ChartComponent } from './weather-station/chart/chart.component';
 import { NavbarComponent } from './weather-station/navbar/navbar.component';
 import { CurrentComponent } from './weather-station/current/current.component';
 import { TableComponent } from './weather-station/table/table.component';
+import {ChartsModule} from "ng2-charts";
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { TableComponent } from './weather-station/table/table.component';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    ChartModule
+    ChartModule,
+    ChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

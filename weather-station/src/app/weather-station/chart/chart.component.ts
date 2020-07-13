@@ -1,50 +1,58 @@
 import {Component, OnInit} from '@angular/core';
 import {DataService} from "../../services/data.service";
+import {ChartsModule} from 'ng2-charts';
 
 @Component({
   selector: 'app-chart',
   template: `
-    <chart type="line" [data]="data" [options]="options"></chart>
+    <div>
+    <canvas baseChart [chartType]="'line'"
+            [datasets]="chartData"
+            [labels]="chartLabels"
+            [options]="chartOptions">
+      [legend]="true"
+      height="400'
+      width="400"
+    </canvas>
+    </div>
   `,
   styleUrls: ['./chart.component.css']
 })
 export class ChartComponent implements OnInit {
-  data: any = <any>{
-    labels: [],
-    datasets: [{
-      yAxisID: 'A',
-      fill: false,
-      lineTension: 0,
-      label: 'Temperature',
-      data: [],
-      borderWidth: 3,
-      borderColor: 'rgba(255, 99, 132, 1)',
-    },
-      {
-        yAxisID: 'B',
-        fill: false,
-        lineTension: 0,
-        label: 'Humidity',
-        data: [],
-        borderWidth: 3,
-        borderColor: 'rgba(54, 162, 235, 1)',
-      }]
-  }
-  options = {
+  chartData =[]
+  chartLabels = [];
+  chartOptions = {
+    responsive: true,
     scales: {
+      xAxes: [{
+        type: 'time',
+        time: {
+          unit: 'minute'
+        }
+      }],
       yAxes: [{
-        id: 'A',
+        id: 'T',
         type: 'linear',
         position: 'left',
+        scaleLabel: {
+          labelString: 'Temperature',
+          display: true
+        },
         ticks: {
-          beginAtZero: true
+          suggestedMin: 20,
+          suggestedMax: 80
         }
       }, {
-        id: 'B',
+        id: 'H',
         type: 'linear',
         position: 'right',
+        scaleLabel: {
+          labelString: 'Humidity',
+          display: true
+        },
         ticks: {
-          beginAtZero: true
+          beginAtZero: true,
+          suggestedMax: 100
         }
       }]
     }
@@ -52,23 +60,26 @@ export class ChartComponent implements OnInit {
 
   constructor(private dataService: DataService) {
   }
+
   l: string[];
   t: number[];
   h: number[];
+
   ngOnInit() {
-   this.dataService.data().subscribe(a => {
+    this.dataService.data().subscribe(a => {
       this.l = Array.of<string>();
       this.t = Array.of<number>();
       this.h = Array.of<number>();
       a.forEach(b => {
-        this.l.push(b.timestamp.substr(11, 5))
+        this.l.push(b.timestamp)
         this.t.push(b.tempF)
         this.h.push(b.humidity)
       })
-      this.data.labels = this.l;
-      this.data.datasets[0].data = this.t;
-      this.data.datasets[1].data = this.h;
+      this.chartLabels = this.l;
+      this.chartData = [
+        {data: this.t, label: 'Temerature',  lineTension: 0, fill: false, yAxisID: 'T'},
+        {data: this.h, label: 'Humidity', lineTension: 0, fill: false, yAxisID: 'H'}
+      ]
     })
   }
-
 }
