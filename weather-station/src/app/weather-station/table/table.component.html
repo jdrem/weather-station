@@ -1,0 +1,20 @@
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th style="text-align:center">time</th>
+    <th style="text-align:center">Temp &deg;C</th>
+    <th style="text-align:center">Temp &deg;F</th>
+    <th style="text-align:center">Humidity %</th>
+    <th style="text-align:center">Pressure (mbars)</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let row of data | async">
+    <td style="text-align:center">{{row.timestamp | date:'short'}}</td>
+    <td style="text-align:center">{{row.tempC + 0.499 | number:'1.0-0'}}</td>
+    <td style="text-align:center">{{row.tempF + 0.499 | number: '1.0-0'}}</td>
+    <td style="text-align:center">{{row.humidity + 0.499 | number: '1.0-0'}}</td>
+    <td style="text-align:center">{{row.pressure | number: '1.1-1'}}</td>
+  </tr>
+  </tbody>
+</table>
