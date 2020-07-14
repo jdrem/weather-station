@@ -8,6 +8,10 @@ import {DataService} from "../../services/data.service";
     <table class="table table-striped">
       <tbody>
       <tr>
+        <td style="text-align:center">Time</td>
+        <td style="text-align:center">{{ts | date:'short'}}</td>
+      </tr>
+      <tr>
         <td style="text-align:center">Temp (F)</td>
         <td style="text-align:center">{{tf+ 0.499 | number:'1.0-0'}}&deg;</td>
       </tr>
@@ -32,6 +36,7 @@ export class CurrentComponent implements OnInit {
 
   constructor(private dataService: DataService) { }
 
+  ts;
   tf;
   tc;
   h;
@@ -39,6 +44,7 @@ export class CurrentComponent implements OnInit {
 
   ngOnInit() {
     this.dataService.data().subscribe(a => {
+      this.ts = a[0].timestamp;
       this.tf = a[0].tempF;
       this.tc = a[0].tempC;
       this.h = a[0].humidity;
