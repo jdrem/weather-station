@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {DataService} from "../../services/data.service";
+import {WebSocketService} from "../../services/web-socket.service";
 
 @Component({
   selector: 'app-current',
@@ -13,7 +14,7 @@ import {DataService} from "../../services/data.service";
       </tr>
       <tr>
         <td style="text-align:center">Temp (F)</td>
-        <td style="text-align:center">{{tf+ 0.499 | number:'1.0-0'}}&deg;</td>
+        <td style="text-align:center">{{tf + 0.499 | number:'1.0-0'}}&deg;</td>
       </tr>
       <tr>
         <td style="text-align:center">Temp (C)</td>
@@ -21,7 +22,7 @@ import {DataService} from "../../services/data.service";
       </tr>
       <tr>
         <td style="text-align:center">Humidity</td>
-        <td style="text-align:center">{{h+ 0.499 | number:'1.0-0'}}%</td>
+        <td style="text-align:center">{{h + 0.499 | number:'1.0-0'}}%</td>
       </tr>
       <tr>
         <td style="text-align:center">Pressure</td>
@@ -34,7 +35,8 @@ import {DataService} from "../../services/data.service";
 })
 export class CurrentComponent implements OnInit {
 
-  constructor(private dataService: DataService) { }
+  constructor(private dataService: DataService, private websocketService: WebSocketService) {
+  }
 
   ts;
   tf;
@@ -50,6 +52,13 @@ export class CurrentComponent implements OnInit {
       this.h = a[0].humidity;
       this.p = a[0].pressure;
     })
+
+    this.websocketService.websocket.subscribe(
+      v => console.log('got value ' + v),
+      error => console.error('something wrong occurred: ' + error),
+      () => console.log('complete')
+    )
+    console.log('finished current info')
   }
 
 }

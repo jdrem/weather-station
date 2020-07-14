@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.Clock;
 import java.time.Instant;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -20,26 +22,29 @@ public class WeaterStationController {
     private final static Logger log = LoggerFactory.getLogger(WeaterStationController.class);
 
     final WeatherUpdateRepository repository;
+    final WeatherEventUpdateService weatherEventUpdateService;
     private Clock clock;
 
-    public WeaterStationController(WeatherUpdateRepository repository) {
+    public WeaterStationController(WeatherUpdateRepository repository, WeatherEventUpdateService weatherEventUpdateService) {
         this.repository = repository;
+        this.weatherEventUpdateService = weatherEventUpdateService;
         this.clock = Clock.systemUTC();
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void update(@RequestBody WeatherUpdate data) {
-        data.setTimestamp(Instant.now(clock));
+        if (data.getTimestamp() == null)
+            data.setTimestamp(Instant.now(clock));
         log.info("Got {}", data);
-        repository.save(data);
+        weatherEventUpdateService.publishWeatherUpdate(data);
     }
 
     final static private String MAX_INSTANT_VALUE = Long.toString(Instant.parse("9999-12-31T23:59:59.999Z").getEpochSecond());
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @RequestMapping(value = "/data", method = RequestMethod.GET)
-    public Page<WeatherUpdate> data(@RequestParam(value = "start") Optional<String> start,
+    public List<WeatherUpdate> data(@RequestParam(value = "start") Optional<String> start,
                                     @RequestParam(value = "end") Optional<String> end,
                                     @RequestParam(value = "page") Optional<Integer> page,
                                     @RequestParam(value = "size") Optional<Integer> size) {
@@ -48,6 +53,13 @@ public class WeaterStationController {
         return repository.findAll((root, query, builder) ->
                         builder.and(builder.greaterThanOrEqualTo(root.get("timestamp"), s),
                                 builder.lessThanOrEqualTo(root.get("timestamp"), e)),
-                PageRequest.of(page.orElse(0), size.orElse(60), Sort.Direction.DESC, "timestamp"));
+                PageRequest.of(page.orElse(0), size.orElse(60), Sort.Direction.DESC, "timestamp")).toList();
+    }
+
+    //TODO added for testing, remove it since it's too dangerous to have in final product
+    @RequestMapping(value = "/deleteAll", method = RequestMethod.GET)
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    void deleteAll() {
+        repository.deleteAll();
     }
 }
