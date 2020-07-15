@@ -1,6 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {DataService} from "../../services/data.service";
 import {ChartsModule} from 'ng2-charts';
+import {Subject} from "rxjs";
+import {WebSocketService} from "../../services/web-socket.service";
+import {WeatherUpdate} from "../../model/weather-update";
 
 @Component({
   selector: 'app-chart',
@@ -58,12 +61,13 @@ export class ChartComponent implements OnInit {
     }
   }
 
-  constructor(private dataService: DataService) {
+  constructor(private dataService: DataService, private webSocketService: WebSocketService) {
   }
 
   l: string[];
   t: number[];
   h: number[];
+  updatesChange = new Subject<any>();
 
   ngOnInit() {
     this.dataService.data().subscribe(a => {
@@ -80,6 +84,17 @@ export class ChartComponent implements OnInit {
         {data: this.t, label: 'Temerature',  lineTension: 0, fill: false, yAxisID: 'T'},
         {data: this.h, label: 'Humidity', lineTension: 0, fill: false, yAxisID: 'H'}
       ]
+    })
+
+    this.webSocketService.webSocket().subscribe((update) => {
+      let o: any = JSON.parse(update.body);
+      let u: WeatherUpdate = o.weatherUpdate;
+      this.l.push(u.timestamp);
+      this.t.push(u.tempF);
+      this.h.push(u.humidity);
+      this.updatesChange.next(this.l);
+      this.updatesChange.next(this.t);
+      this.updatesChange.next(this.h);
     })
   }
 }

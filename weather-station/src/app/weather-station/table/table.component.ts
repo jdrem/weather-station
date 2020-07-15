@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {DataService} from "../../services/data.service";
 import {WebSocketService} from "../../services/web-socket.service";
 import {WeatherUpdate} from "../../model/weather-update";
-import {Observable, of, Subject} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {map} from "rxjs/operators";
 
 @Component({
@@ -20,7 +20,6 @@ export class TableComponent implements OnInit {
       this.data = this.dataService.data().pipe(
         map(d => {
           this.updateList = d;
-          this.updatesChange.next(this.updateList)
           return d;
         }),
       );
