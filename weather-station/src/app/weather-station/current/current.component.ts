@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {DataService} from "../../services/data.service";
-import {RxStompService} from "@stomp/ng2-stompjs";
 import {WeatherUpdate} from "../../model/weather-update";
+import {WebSocketService} from "../../services/web-socket.service";
 
 @Component({
   selector: 'app-current',
@@ -36,7 +36,7 @@ import {WeatherUpdate} from "../../model/weather-update";
 })
 export class CurrentComponent implements OnInit {
 
-  constructor(private dataService: DataService, private rxStompService: RxStompService) {
+  constructor(private dataService: DataService, private webSocketService: WebSocketService) {
   }
 
   ts;
@@ -54,7 +54,7 @@ export class CurrentComponent implements OnInit {
       this.p = a[0].pressure;
     })
 
-      this.rxStompService.watch('/topic/weatherEventUpdate').subscribe((update) => {
+    this.webSocketService.webSocket().subscribe((update) => {
       console.log('got message from ws: ' + update.body);
       let o: any = JSON.parse(update.body);
       let u: WeatherUpdate = o.weatherUpdate;
