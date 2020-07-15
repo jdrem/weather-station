@@ -10,6 +10,8 @@ import { NavbarComponent } from './weather-station/navbar/navbar.component';
 import { CurrentComponent } from './weather-station/current/current.component';
 import { TableComponent } from './weather-station/table/table.component';
 import {ChartsModule} from "ng2-charts";
+import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from "@stomp/ng2-stompjs";
+import {rxStompConfig} from "./rx-stomp.config";
 
 @NgModule({
   declarations: [
@@ -26,7 +28,17 @@ import {ChartsModule} from "ng2-charts";
     ChartModule,
     ChartsModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: InjectableRxStompConfig,
+      useValue: rxStompConfig
+    },
+    {
+      provide: RxStompService,
+      useFactory: rxStompServiceFactory,
+      deps: [InjectableRxStompConfig]
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
