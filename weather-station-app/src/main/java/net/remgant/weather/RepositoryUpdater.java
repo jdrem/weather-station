@@ -17,7 +17,7 @@ public class RepositoryUpdater implements ApplicationListener<WeatherUpdateEvent
 
     @Override
     public void onApplicationEvent(WeatherUpdateEvent weatherUpdateEvent) {
-         log.info("Got event for {}",weatherUpdateEvent.getWeatherUpdate());
-         // repository.save(weatherUpdateEvent.getWeatherUpdate());
+        log.info("Got event for {}", weatherUpdateEvent.getWeatherUpdate());
+        repository.save(weatherUpdateEvent.getWeatherUpdate());
     }
 }
