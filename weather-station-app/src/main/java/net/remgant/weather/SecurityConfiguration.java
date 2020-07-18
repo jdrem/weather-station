@@ -48,7 +48,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         httpSecurity.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/update").hasRole("USER")
-                .antMatchers("/api/deleteAll").hasRole("AMDIN")
+                .antMatchers("/api/deleteAll").hasRole("ADMIN")
                 .and()
                 .httpBasic()
                 .authenticationEntryPoint(basciAuthEntryPoint());
