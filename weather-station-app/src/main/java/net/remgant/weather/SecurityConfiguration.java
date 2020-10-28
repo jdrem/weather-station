@@ -58,7 +58,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public BasicAuthenticationEntryPoint basciAuthEntryPoint() {
         return new BasicAuthenticationEntryPoint() {
             @Override
-            public void afterPropertiesSet() throws Exception {
+            public void afterPropertiesSet() {
                 setRealmName(REALM);
                 super.afterPropertiesSet();
             }

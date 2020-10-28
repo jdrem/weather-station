@@ -31,6 +31,7 @@ public class Application extends SpringBootServletInitializer {
     }
 
     private static void initInitialContext() {
+        @SuppressWarnings("deprecation")
         SimpleNamingContextBuilder builder = new SimpleNamingContextBuilder();
         String dbUrl = System.getProperty("db.url");
         String dbUser = System.getProperty("db.user");
