@@ -4,7 +4,6 @@ import net.remgant.weather.dao.WeatherUpdateRepository;
 import net.remgant.weather.model.WeatherUpdate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -13,19 +12,18 @@ import org.springframework.web.bind.annotation.*;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
-public class WeaterStationController {
-    private final static Logger log = LoggerFactory.getLogger(WeaterStationController.class);
+public class WeatherStationController {
+    private final static Logger log = LoggerFactory.getLogger(WeatherStationController.class);
 
     final WeatherUpdateRepository repository;
     final WeatherEventUpdateService weatherEventUpdateService;
     private Clock clock;
 
-    public WeaterStationController(WeatherUpdateRepository repository, WeatherEventUpdateService weatherEventUpdateService) {
+    public WeatherStationController(WeatherUpdateRepository repository, WeatherEventUpdateService weatherEventUpdateService) {
         this.repository = repository;
         this.weatherEventUpdateService = weatherEventUpdateService;
         this.clock = Clock.systemUTC();
