@@ -4,26 +4,21 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 @SpringBootApplication
 @EnableJpaRepositories(basePackages = "net.remgant.weather.dao")
 @EntityScan("net.remgant.weather.model")
-@PropertySource("persistence-weather-update.properties")
 public class Application extends SpringBootServletInitializer {
-
-    private final Environment env;
-
-    public Application(Environment env) {
-        this.env = env;
-    }
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
@@ -31,16 +26,33 @@ public class Application extends SpringBootServletInitializer {
     }
 
     public static void main(String[] args) {
+        initInitialContext();
         SpringApplication.run(Application.class, args);
+    }
+
+    private static void initInitialContext() {
+        @SuppressWarnings("deprecation")
+        SimpleNamingContextBuilder builder = new SimpleNamingContextBuilder();
+        String dbUrl = System.getProperty("db.url");
+        String dbUser = System.getProperty("db.user");
+        String dbPwd = System.getProperty("db.pwd");
+        DataSource dataSource = new DriverManagerDataSource(dbUrl, dbUser, dbPwd);
+        builder.bind("java:/comp/env/jdbc/weather", dataSource);
+        try {
+            builder.activate();
+        } catch (NamingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Bean
     public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(env.getProperty("jdbc.driverClassName"));
-        dataSource.setUrl(env.getProperty("jdbc.url"));
-        dataSource.setUsername(env.getProperty("jdbc.user"));
-        dataSource.setPassword(env.getProperty("jdbc.pass"));
-        return dataSource;
+        Context initContext;
+        try {
+            initContext = new InitialContext();
+            return (DataSource) initContext.lookup("java:/comp/env/jdbc/weather");
+        } catch (NamingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

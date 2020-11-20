@@ -32,7 +32,9 @@ export class DataService {
       console.log("result pending, sending o")
       return this.o;
     } else {
-      this.o = this.http.get<WeatherUpdate[]>('/api/data?size=60').pipe(
+      // Get the last days worth of data, but no more than 288 items (i.e. every 5 min over 24 hours)
+      let t = Math.floor((new Date()).getTime() / 1000) - (24*60*60);
+      this.o = this.http.get<WeatherUpdate[]>('/api/data?size=288&start='+t).pipe(
         share()
       );
       this.o.subscribe(r => {
