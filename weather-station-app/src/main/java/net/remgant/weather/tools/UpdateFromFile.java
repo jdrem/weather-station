@@ -42,7 +42,7 @@ public class UpdateFromFile {
         Path path = FileSystems.getDefault().getPath(dateFileName);
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        String auth = "admin" + ":" + "password";
+        String auth = userName + ":" + password;
         byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.US_ASCII));
         String authHeader = "Basic " + new String(encodedAuth);
         headers.set("Authorization", authHeader);
