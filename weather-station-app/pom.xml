@@ -139,4 +139,47 @@
 
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>rpm-maven-plugin</artifactId>
+                <version>2.2.0</version>
+                <executions>
+                    <execution>
+                        <id>generate-rpm</id>
+                        <goals>
+                            <goal>rpm</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <group>Applications/Internet</group>
+                    <!--suppress MavenModelInspection -->
+                    <release>${build.number}</release>
+                    <mappings>
+                        <mapping>
+                            <directoryIncluded>false</directoryIncluded>
+                            <directory>/usr/share/tomcat</directory>
+                            <sources>
+                                <source>
+                                    <location>${project.basedir}/target/weather-station-app-${version}.war</location>
+                                </source>
+                                <source>
+                                    <location>${project.basedir}/conf/context.xml</location>
+                                </source>
+                                <source>
+                                    <location>${project.basedir}/conf/catalina.policy</location>
+                                </source>
+                                <source>
+                                    <location>${project.basedir}/conf/server.xml</location>
+                                </source>
+                            </sources>
+                        </mapping>
+                    </mappings>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>
