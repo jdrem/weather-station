@@ -143,4 +143,28 @@
 
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>rpm-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-rpm</id>
+                        <goals>
+                            <goal>rpm</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <disabled>true</disabled>
+                    <group>Applications/Internet</group>
+                    <!--suppress MavenModelInspection -->
+                    <release>${build.number}</release>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
 </project>
