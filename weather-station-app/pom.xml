@@ -161,6 +161,19 @@
                     <group>Applications/Internet</group>
                     <!--suppress MavenModelInspection -->
                     <release>${build.number}</release>
+                    <mappings>
+                        <mapping>
+                            <directoryIncluded>false</directoryIncluded>
+                            <directory>/usr/share/tomcat</directory>
+                            <sources>
+                                <source>
+                                    <location>
+                                        ${project.basedir}/.placeholder
+                                    </location>
+                                </source>
+                            </sources>
+                        </mapping>
+                    </mappings>
                 </configuration>
             </plugin>
         </plugins>
