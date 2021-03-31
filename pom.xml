@@ -66,7 +66,7 @@
                         </mapping>
                         <mapping>
                             <directoryIncluded>true</directoryIncluded>
-                            <directory>/usr/share/httpd</directory>
+                            <directory>/usr/share/weather-station</directory>
                             <sources>
                                 <source>
                                     <location>${project.basedir}/weather-station/dist/weather-station</location>
