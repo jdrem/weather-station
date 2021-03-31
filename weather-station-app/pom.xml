@@ -143,4 +143,41 @@
 
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>rpm-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-rpm</id>
+                        <goals>
+                            <goal>rpm</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <disabled>true</disabled>
+                    <group>Applications/Internet</group>
+                    <!--suppress MavenModelInspection -->
+                    <release>${build.number}</release>
+                    <mappings>
+                        <mapping>
+                            <directoryIncluded>false</directoryIncluded>
+                            <directory>/usr/share/tomcat</directory>
+                            <sources>
+                                <source>
+                                    <location>
+                                        ${project.basedir}/.placeholder
+                                    </location>
+                                </source>
+                            </sources>
+                        </mapping>
+                    </mappings>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
 </project>
