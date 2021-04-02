@@ -48,10 +48,21 @@
                     <mappings>
                         <mapping>
                             <directoryIncluded>false</directoryIncluded>
-                            <directory>/usr/share/tomcat</directory>
+                            <directory>/usr/share/weather-station</directory>
                             <sources>
                                 <source>
-                                    <location>${project.basedir}/weather-station-app/target/weather-station-app-${version}.war</location>
+                                    <location>${project.basedir}/docker-compose.yaml</location>
+                                </source>
+                            </sources>
+                        </mapping>
+                        <mapping>
+                            <directoryIncluded>false</directoryIncluded>
+                            <directory>/usr/share/weather-station/tomcat</directory>
+                            <sources>
+                                <source>
+                                    <location>
+                                        ${project.basedir}/weather-station-app/target/weather-station-app-${version}.war
+                                    </location>
                                 </source>
                                 <source>
                                     <location>${project.basedir}/weather-station-app/conf/context.xml</location>
@@ -65,8 +76,17 @@
                             </sources>
                         </mapping>
                         <mapping>
+                            <directoryIncluded>false</directoryIncluded>
+                            <directory>/usr/share/weather-station/htconfig</directory>
+                            <sources>
+                                <source>
+                                    <location>${project.basedir}/httpd/httpd.conf</location>
+                                </source>
+                            </sources>
+                        </mapping>
+                        <mapping>
                             <directoryIncluded>true</directoryIncluded>
-                            <directory>/usr/share/weather-station</directory>
+                            <directory>/usr/share/weather-station/htdocs</directory>
                             <sources>
                                 <source>
                                     <location>${project.basedir}/weather-station/dist/weather-station</location>
