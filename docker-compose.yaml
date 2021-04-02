@@ -1,0 +1,84 @@
+version: '3.3'
+
+services: 
+    
+  mysql:
+    image: mysql
+    container_name: weather-db
+    hostname: 'DB'
+    restart: unless-stopped
+    deploy:
+       replicas: 1
+    volumes:
+      - type: bind
+        source: "${HOME}/mysql"
+        target: /var/lib/mysql
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
+      MYSQL_PASSWORD_FILE: /run/secrets/mysql_user_password
+      MYSQL_DATABASE: weather
+      MYSQL_USER: wuser
+    secrets:
+      - mysql_root_password
+      - mysql_user_password
+
+  httpd:
+    image: httpd:2.4
+    container_name: weather-httpd
+    volumes:
+      - type: bind
+        source: /usr/share/weather-station/htconfig/httpd.conf
+        target: /usr/local/apache2/conf/httpd.conf
+      - type: bind
+        source: /usr/share/weather-station/htdocs
+        target: /usr/local/apache2/htdocs
+      - type: bind
+        source: "${HOME}/secrets/fullchain.pem"
+        target: /usr/local/apache2/conf/server.crt
+      - type: bind
+        source: "${HOME}/secrets/privkey.pem"
+        target: /usr/local/apache2/conf/server.key
+    ports:
+      - 80:80
+      - 443:443
+
+  tomcat:
+    image: jdrem/tomcat-docker:1.0
+    container_name: weather-app
+    volumes:
+       - type: bind
+         source: /usr/share/weather-station/tomcat/weather-station-app-1.0-SNAPSHOT.war
+         target: /usr/local/tomcat/webapps/ROOT.war
+       - type: bind
+         source: /usr/share/weather-station/tomcat/context.xml
+         target: /usr/local/tomcat/conf/context.xml
+       - type: bind
+         source: /usr/share/weather-station/tomcat/server.xml
+         target: /usr/local/tomcat/conf/server.xml
+       - type: bind
+         source: /usr/share/weather-station/tomcat/catalina.policy
+         target: /usr/local/tomcat/conf/catalina.policy
+       - type: bind
+         source: "${HOME}/tomcat/logs"
+         target: /usr/local/tomcat/logs
+       - type: bind
+         source: "${HOME}/secrets/keystore.jks"
+         target: /usr/local/tomcat/conf/keystore.jks
+    environment:
+         MYSQL_PASSWORD_FILE: /run/secrets/mysql_user_password
+         JAVA_OPTS: -Ddb.url=jdbc:mysql://DB:3306/weather -Ddb.user=wuser  -Drest.user=user -Drest.password=password -Drest.admin.user=admin -Drest.admin.password=apassword
+    ports:
+       - 8443:8443
+    secrets:
+      - mysql_root_password
+      - mysql_user_password
+    depends_on:
+      - mysql
+       
+secrets:
+     mysql_root_password:
+        file: "${HOME}/secrets/mysql_root_password"
+     mysql_user_password:
+        file: "${HOME}/secrets/mysql_user_password"
