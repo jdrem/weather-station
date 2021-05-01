@@ -21,7 +21,7 @@ public class WeatherStationController {
 
     final WeatherUpdateRepository repository;
     final WeatherEventUpdateService weatherEventUpdateService;
-    private Clock clock;
+    final private Clock clock;
 
     public WeatherStationController(WeatherUpdateRepository repository, WeatherEventUpdateService weatherEventUpdateService) {
         this.repository = repository;
@@ -49,9 +49,9 @@ public class WeatherStationController {
         Instant s = Instant.ofEpochSecond(Long.parseLong(start.orElse("0")));
         Instant e = Instant.ofEpochSecond(Long.parseLong(end.orElse(MAX_INSTANT_VALUE)));
         return repository.findAll((root, query, builder) ->
-                        builder.and(builder.greaterThanOrEqualTo(root.get("timestamp"), s),
-                                builder.lessThanOrEqualTo(root.get("timestamp"), e)),
-                PageRequest.of(page.orElse(0), size.orElse(60), Sort.Direction.DESC, "timestamp")).toList();
+                        builder.and(builder.greaterThanOrEqualTo(root.get("timestamp"), Instant.ofEpochSecond(start)),
+                                builder.lessThanOrEqualTo(root.get("timestamp"), Instant.ofEpochSecond(end))),
+                PageRequest.of(page, size, Sort.Direction.DESC, "timestamp")).toList();
     }
 
     //TODO added for testing, remove it since it's too dangerous to have in final product
