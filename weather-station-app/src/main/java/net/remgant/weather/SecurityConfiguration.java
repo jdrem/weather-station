@@ -26,13 +26,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final static String REALM = "REMGANT_REALM";
 
-    @Value("${rest.user:}")
+    @Value("${REST_USER:}")
     private String restUser;
-    @Value("${rest.password:}")
+    @Value("${REST_PASSWORD:}")
     private String restPassword;
-    @Value("${rest.admin.user:}")
+    @Value("${REST_ADMIN_USER:}")
     private String adminUser;
-    @Value("${rest.admin.password:}")
+    @Value("${REST_ADMIN_PASSWORD:}")
     private String adminPassword;
 
     @Autowired
