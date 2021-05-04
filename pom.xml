@@ -65,9 +65,6 @@
                                     </location>
                                 </source>
                                 <source>
-                                    <location>${project.basedir}/weather-station-app/conf/context.xml</location>
-                                </source>
-                                <source>
                                     <location>${project.basedir}/weather-station-app/conf/catalina.policy</location>
                                 </source>
                                 <source>
