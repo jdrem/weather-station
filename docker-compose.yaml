@@ -45,15 +45,12 @@ services:
       - 443:443
 
   tomcat:
-    image: jdrem/tomcat-docker:1.0
+    image: jdrem/tomcat-docker:1.1
     container_name: weather-app
     volumes:
        - type: bind
          source: /usr/share/weather-station/tomcat/weather-station-app-1.0-SNAPSHOT.war
          target: /usr/local/tomcat/webapps/ROOT.war
-       - type: bind
-         source: /usr/share/weather-station/tomcat/context.xml
-         target: /usr/local/tomcat/conf/context.xml
        - type: bind
          source: /usr/share/weather-station/tomcat/server.xml
          target: /usr/local/tomcat/conf/server.xml
@@ -67,13 +64,20 @@ services:
          source: "${HOME}/secrets/keystore.jks"
          target: /usr/local/tomcat/conf/keystore.jks
     environment:
-         MYSQL_PASSWORD_FILE: /run/secrets/mysql_user_password
-         JAVA_OPTS: -Ddb.url=jdbc:mysql://DB:3306/weather -Ddb.user=wuser  -Drest.user=user -Drest.password=password -Drest.admin.user=admin -Drest.admin.password=apassword
+         WEATHER_DB_URL: jdbc:mysql://DB:3306/weather
+         WEATHER_DB_USER: wuser
+         WEATHER_DB_PASSWORD: DOCKER-SECRET:mysql_user_password
+         REST_USER: restuser
+         REST_PASSWORD: DOCKER-SECRET:rest_user_password
+         REST_ADMIN_USER: restadmin
+         REST_ADMIN_PASSWORD: DOCKER-SECRET:rest_admin_user_password
     ports:
        - 8443:8443
     secrets:
       - mysql_root_password
       - mysql_user_password
+      - rest_user_password
+      - rest_admin_user_password
     depends_on:
       - mysql
        
@@ -82,3 +86,7 @@ secrets:
         file: "${HOME}/secrets/mysql_root_password"
      mysql_user_password:
         file: "${HOME}/secrets/mysql_user_password"
+     rest_user_password:
+        file: "${HOME}/secrets/rest_user_password"
+     rest_admin_user_password:
+        file: "${HOME}/secrets/rest_admin_user_password"
