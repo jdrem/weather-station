@@ -21,7 +21,7 @@
     "@angular/router": "~8.2.14",
     "@stomp/ng2-stompjs": "^7.2.0",
     "angular2-chartjs": "^0.5.1",
-    "chart.js": "^2.9.3",
+    "chart.js": "^2.9.4",
     "ng2-charts": "^2.3.2",
     "ng2-stomp-service": "^1.2.2",
     "rxjs": "~6.4.0",
