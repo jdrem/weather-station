@@ -278,6 +278,8 @@ grant codeBase "file:${catalina.base}/webapps/ROOT/-" {
       permission java.lang.RuntimePermission "accessClassInPackage.org.apache.coyote";
 	  permission java.lang.RuntimePermission "accessClassInPackage.org.apache.catalina.startup";
       permission java.lang.RuntimePermission "accessClassInPackage.org.apache.catalina.core";
+      permission java.lang.RuntimePermission "modifyThread;
+      permission java.net.SocketPermission "*:3306-3309", "connect,resolve";
 };
 
 grant codeBase "jar:file:${catalina.base}/webapps/ROOT/WEB-INF/lib/mysql-connector-java-8.0.19.jar!/-" {
