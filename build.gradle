@@ -1,20 +1,8 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-
-    dependencies {
-        classpath 'com.netflix.nebula:gradle-ospackage-plugin:8.4.1'
-    }
-}
-
 plugins {
-    id 'net.remgant.weather.java-common-conventions'
+    id 'nebula.rpm' version '8.4.1'
 }
 
-ext.buildNumber = project.properties['buildNumber'] ?: "999"
-
-apply plugin: 'nebula.rpm'
+ext.buildNumber = project.properties['buildNumber'] ?: "0"
 
 task buildNo() {
     println buildNumber
