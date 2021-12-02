@@ -1,0 +1,8 @@
+plugins {
+    id 'net.remgant.weather.java-application-conventions'
+}
+
+application {
+    // Define the main class for the application.
+    mainClass = 'net.remgant.weather.Application'
+}
