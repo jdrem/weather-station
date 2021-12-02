@@ -8,4 +8,4 @@
  */
 
 rootProject.name = 'weather-station'
-include('weather-station-app')
+include('weather-station-app','weather-station')
