@@ -4,9 +4,5 @@ plugins {
 
 application {
     // Define the main class for the application.
-    mainClass = 'net.remgant.weather.Application'
+    mainClass = 'net.remgant.weather.UpdaterApplication'
 }
-
-//dependencies {
-//    implementation project(':weather-station-lib')
-//}

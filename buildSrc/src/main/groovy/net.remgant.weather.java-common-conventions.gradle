@@ -19,7 +19,7 @@ repositories {
 }
 
 ext {
-    springFrameworkVersion = '5.2.7.RELEASE'
+    springFrameworkVersion = '5.3.13'
     springFrameworkBootVersion = '2.3.1.RELEASE'
     fasterXmlVersion = '2.11.1'
     orgSlf4jVersion = '1.7.16'

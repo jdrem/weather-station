@@ -3,3 +3,11 @@
 **/*.iml
 **/target
 **/build
+**/*.p12
+**/*.jks
+*.crt
+*.csr
+*.key
+rootCA.srl
+fullchain.pem
+privkey.pem
