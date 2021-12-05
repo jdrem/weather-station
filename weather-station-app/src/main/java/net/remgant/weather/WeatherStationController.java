@@ -28,15 +28,6 @@ public class WeatherStationController {
         this.clock = Clock.systemUTC();
     }
 
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void update(@RequestBody WeatherUpdate data) {
-        if (data.getTimestamp() == null)
-            data.setTimestamp(Instant.now(clock));
-        log.info("Got {}", data);
-        weatherEventUpdateService.publishWeatherUpdate(data);
-    }
-
     @RequestMapping(value = "/data", method = RequestMethod.GET)
     public List<WeatherUpdate> data(@RequestParam(value = "start", defaultValue = "0") long start,
                                     @RequestParam(value = "end", defaultValue = "253402300799") long end,
@@ -46,12 +37,5 @@ public class WeatherStationController {
                         builder.and(builder.greaterThanOrEqualTo(root.get("timestamp"), Instant.ofEpochSecond(start)),
                                 builder.lessThanOrEqualTo(root.get("timestamp"), Instant.ofEpochSecond(end))),
                 PageRequest.of(page, size, Sort.Direction.DESC, "timestamp")).toList();
-    }
-
-    //TODO added for testing, remove it since it's too dangerous to have in final product
-    @RequestMapping(value = "/deleteAll", method = RequestMethod.GET)
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    void deleteAll() {
-        repository.deleteAll();
     }
 }

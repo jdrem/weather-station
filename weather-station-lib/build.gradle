@@ -1,0 +1,3 @@
+plugins {
+    id 'net.remgant.weather.java-library-conventions'
+}
