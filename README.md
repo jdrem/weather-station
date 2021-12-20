@@ -1,3 +1,6 @@
+# Weather Station
+This is the web and backend code for a weather station something like this [Arduino Weather Station Project](http://cactus.io/projects/weather/arduino-weather-station)
+
 ## Issues Resolved
       
 ### Teamcity SSH not working
