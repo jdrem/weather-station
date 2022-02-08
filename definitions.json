@@ -1,0 +1,67 @@
+{
+  "rabbit_version": "3.9.11",
+  "rabbitmq_version": "3.9.11",
+  "product_name": "RabbitMQ",
+  "product_version": "3.9.11",
+  "users": [
+    {
+      "name": "alice",
+      "password_hash": "+2yjZcIbnhhmlM4x1lYBYmrJ5LIcb5wSHuEQR92cuNrjJHsl",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": [],
+      "limits": {}
+    },
+    {
+      "name": "guest",
+      "password_hash": "byf/AboCQ7rTFMkpgcjYSnU6DeG7RZxHNmsfac2qoR5xYpyA",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": [
+        "administrator"
+      ],
+      "limits": {}
+    }
+  ],
+  "vhosts": [
+    {
+      "name": "/"
+    },
+    {
+      "name": "/weather"
+    }
+  ],
+  "permissions": [
+    {
+      "user": "guest",
+      "vhost": "/",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    },
+    {
+      "user": "guest",
+      "vhost": "/weather",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    },
+    {
+      "user": "alice",
+      "vhost": "/weather",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    }
+  ],
+  "topic_permissions": [],
+  "parameters": [],
+  "global_parameters": [
+    {
+      "name": "internal_cluster_id",
+      "value": "rabbitmq-cluster-id-kyLltLsmR1kmfmXrrmyMag"
+    }
+  ],
+  "policies": [],
+  "queues": [],
+  "exchanges": [],
+  "bindings": []
+}
