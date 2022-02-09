@@ -1,6 +1,8 @@
 package net.remgant.weather;
 
+import com.rabbitmq.client.DefaultSaslConfig;
 import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
@@ -52,6 +54,7 @@ public class Application extends SpringBootServletInitializer {
     @Bean
     SimpleMessageListenerContainer container(ConnectionFactory connectionFactory,
                                              MessageListenerAdapter listenerAdapter) {
+      ((CachingConnectionFactory)connectionFactory).getRabbitConnectionFactory().setSaslConfig(DefaultSaslConfig.EXTERNAL);
       SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
       container.setConnectionFactory(connectionFactory);
       container.setQueueNames(queueName);
