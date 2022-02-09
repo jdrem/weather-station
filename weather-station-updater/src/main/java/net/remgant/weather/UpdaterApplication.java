@@ -2,11 +2,13 @@ package net.remgant.weather;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.rabbitmq.client.DefaultSaslConfig;
 import net.remgant.weather.dao.WeatherUpdateRepository;
 import net.remgant.weather.gson.InstantAdapter;
 import net.remgant.weather.model.WeatherUpdate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -41,6 +43,8 @@ public class UpdaterApplication extends SpringBootServletInitializer {
     public UpdaterApplication(WeatherUpdateRepository repository, RabbitTemplate rabbitTemplate) {
         this.repository = repository;
         this.rabbitTemplate = rabbitTemplate;
+        CachingConnectionFactory connectionFactory = (CachingConnectionFactory) rabbitTemplate.getConnectionFactory();
+        connectionFactory.getRabbitConnectionFactory().setSaslConfig(DefaultSaslConfig.EXTERNAL);
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Instant.class, new InstantAdapter());
         this.gson = builder.create();
