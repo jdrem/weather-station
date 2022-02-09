@@ -1,67 +1,79 @@
 {
-  "rabbit_version": "3.9.11",
-  "rabbitmq_version": "3.9.11",
-  "product_name": "RabbitMQ",
-  "product_version": "3.9.11",
-  "users": [
+  "bindings": [],
+  "exchanges": [
     {
-      "name": "alice",
-      "password_hash": "+2yjZcIbnhhmlM4x1lYBYmrJ5LIcb5wSHuEQR92cuNrjJHsl",
-      "hashing_algorithm": "rabbit_password_hashing_sha256",
-      "tags": [],
-      "limits": {}
-    },
-    {
-      "name": "guest",
-      "password_hash": "byf/AboCQ7rTFMkpgcjYSnU6DeG7RZxHNmsfac2qoR5xYpyA",
-      "hashing_algorithm": "rabbit_password_hashing_sha256",
-      "tags": [
-        "administrator"
-      ],
-      "limits": {}
+      "arguments": {},
+      "auto_delete": false,
+      "durable": true,
+      "name": "weather-direct-exchange",
+      "type": "direct",
+      "vhost": "/"
     }
   ],
-  "vhosts": [
-    {
-      "name": "/"
-    },
-    {
-      "name": "/weather"
-    }
-  ],
+  "global_parameters": [],
+  "parameters": [],
   "permissions": [
     {
-      "user": "guest",
-      "vhost": "/",
       "configure": ".*",
-      "write": ".*",
-      "read": ".*"
-    },
-    {
-      "user": "guest",
-      "vhost": "/weather",
-      "configure": ".*",
-      "write": ".*",
-      "read": ".*"
-    },
-    {
+      "read": ".*",
       "user": "alice",
       "vhost": "/weather",
-      "configure": ".*",
-      "write": ".*",
-      "read": ".*"
-    }
-  ],
-  "topic_permissions": [],
-  "parameters": [],
-  "global_parameters": [
+      "write": ".*"
+    },
     {
-      "name": "internal_cluster_id",
-      "value": "rabbitmq-cluster-id-kyLltLsmR1kmfmXrrmyMag"
+      "configure": ".*",
+      "read": ".*",
+      "user": "guest",
+      "vhost": "/",
+      "write": ".*"
+    },
+    {
+      "configure": ".*",
+      "read": ".*",
+      "user": "guest",
+      "vhost": "/weather",
+      "write": ".*"
     }
   ],
   "policies": [],
   "queues": [],
-  "exchanges": [],
-  "bindings": []
+  "rabbit_version": "3.9.11",
+  "rabbitmq_version": "3.9.11",
+  "topic_permissions": [],
+  "users": [
+    {
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "limits": {},
+      "name": "alice",
+      "password_hash": "+2yjZcIbnhhmlM4x1lYBYmrJ5LIcb5wSHuEQR92cuNrjJHsl",
+      "tags": []
+    },
+    {
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "limits": {},
+      "name": "guest",
+      "password_hash": "byf/AboCQ7rTFMkpgcjYSnU6DeG7RZxHNmsfac2qoR5xYpyA",
+      "tags": [
+        "administrator"
+      ]
+    }
+  ],
+  "vhosts": [
+    {
+      "limits": [],
+      "metadata": {
+        "description": "Default virtual host",
+        "tags": []
+      },
+      "name": "/"
+    },
+    {
+      "limits": [],
+      "metadata": {
+        "description": "",
+        "tags": []
+      },
+      "name": "/weather"
+    }
+  ]
 }
