@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class WebSocketSender implements ApplicationListener<WeatherUpdateEvent> {
     final static private Logger log = LoggerFactory.getLogger(WebSocketSender.class);
-    private SimpMessagingTemplate template;
+    private final SimpMessagingTemplate template;
 
     public WebSocketSender(SimpMessagingTemplate template) {
         this.template = template;

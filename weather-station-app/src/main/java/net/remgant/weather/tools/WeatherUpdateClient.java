@@ -25,7 +25,7 @@ import java.time.Instant;
 import java.util.Scanner;
 
 public class WeatherUpdateClient {
-    private static final String URL = "ws://localhost:9099/update";
+    private static final String URL = "wss://walrus.home.remgant.net:8098/update";
 
     public static void main(String[] args) {
         SimpleModule module = new SimpleModule();

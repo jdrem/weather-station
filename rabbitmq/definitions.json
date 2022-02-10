@@ -1,0 +1,133 @@
+{
+  "bindings": [
+    {
+      "arguments": {},
+      "destination": "weather-update",
+      "destination_type": "queue",
+      "routing_key": "weather.updates",
+      "source": "weather-direct-exchange",
+      "vhost": "/weather"
+    }
+  ],
+  "exchanges": [
+    {
+      "arguments": {},
+      "auto_delete": false,
+      "durable": true,
+      "name": "weather-direct-exchange",
+      "type": "direct",
+      "vhost": "/weather"
+    },
+    {
+      "arguments": {},
+      "auto_delete": false,
+      "durable": true,
+      "name": "weather-direct-exchange",
+      "type": "direct",
+      "vhost": "/"
+    }
+  ],
+  "global_parameters": [],
+  "parameters": [],
+  "permissions": [
+    {
+      "configure": ".*",
+      "read": ".*",
+      "user": "alice",
+      "vhost": "/weather",
+      "write": ".*"
+    },
+    {
+      "configure": "",
+      "read": "weather-direct-exchange",
+      "user": "weather-updater",
+      "vhost": "/weather",
+      "write": "weather-direct-exchange"
+    },
+    {
+      "configure": ".*",
+      "read": ".*",
+      "user": "guest",
+      "vhost": "/",
+      "write": ".*"
+    },
+    {
+      "configure": ".*",
+      "read": ".*",
+      "user": "guest",
+      "vhost": "/weather",
+      "write": ".*"
+    },
+    {
+      "configure": ".*",
+      "read": ".*",
+      "user": "weather-station",
+      "vhost": "/weather",
+      "write": ".*"
+    }
+  ],
+  "policies": [],
+  "queues": [
+    {
+      "arguments": {},
+      "auto_delete": false,
+      "durable": false,
+      "name": "weather-update",
+      "type": "classic",
+      "vhost": "/weather"
+    }
+  ],
+  "rabbit_version": "3.9.11",
+  "rabbitmq_version": "3.9.11",
+  "topic_permissions": [],
+  "users": [
+    {
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "limits": {},
+      "name": "alice",
+      "password_hash": "+2yjZcIbnhhmlM4x1lYBYmrJ5LIcb5wSHuEQR92cuNrjJHsl",
+      "tags": []
+    },
+    {
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "limits": {},
+      "name": "weather-updater",
+      "password_hash": "",
+      "tags": []
+    },
+    {
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "limits": {},
+      "name": "weather-station",
+      "password_hash": "lurF46jwcuYSQlbMsBOWc2sq4G8JgxK41UwYI/heYNO70kva",
+      "tags": []
+    },
+    {
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "limits": {},
+      "name": "guest",
+      "password_hash": "byf/AboCQ7rTFMkpgcjYSnU6DeG7RZxHNmsfac2qoR5xYpyA",
+      "tags": [
+        "administrator"
+      ]
+    }
+  ],
+  "vhosts": [
+    {
+      "limits": [],
+      "metadata": {
+        "description": "Default virtual host",
+        "tags": []
+      },
+      "name": "/"
+    },
+    {
+      "limits": [],
+      "metadata": {
+        "description": "",
+        "tags": []
+      },
+      "name": "/weather"
+    }
+  ]
+}
