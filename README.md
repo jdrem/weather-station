@@ -113,6 +113,11 @@ openssl pkcs12 -export -in fullchain.pem -inkey privkey.pem -out ssl.p12 -name  
 keytool -importkeystore -destkeystore keystore.jks -srckeystore ssl.p12 -srcstoretype PKCS12
 ```
 
+An alternate way of doing this:
+```bash
+openssl pkcs12 -export -in fullchain.pem -inkey privkey.pem -out ssl.p12 -name "*.home.remgant.net" -CAfile chain.pem  -caname root
+```
+
 ## Issues Resolved
       
 ### Teamcity SSH not working
@@ -145,6 +150,19 @@ add this line:
 %wheel  ALL=    NOPASSWD: SOFTWARE
 ```
 
-
+# Start rabbitmq with custom config
+```bash 
+docker run -d --name weather-rabbitmq \
+-p 5672:5672 \
+-p 15672:15672 \
+-v  /home/jdr/Projects/weather-station/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf \
+-v /home/jdr/Projects/weather-station/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json \
+-v /home/jdr/Projects/weather-station/rabbitmq/advanced.config:/etc/rabbitmq/advanced.config \
+-v /home/jdr/Projects/weather-station/rabbitmq/passphrase:/etc/rabbitmq/passphrase \
+-v /home/jdr/Projects/weather-station/rootCA.crt:/etc/rabbitmq/rootCA.crt \
+-v /home/jdr/Projects/weather-station/rabbitmq.crt:/etc/rabbitmq/rabbitmq.crt \
+-v /home/jdr/Projects/weather-station/rabbitmq.key:/etc/rabbitmq/rabbitmq.key \
+rabbitmq:management
+```
 
 
