@@ -11,6 +11,7 @@ plugins {
     id 'application'
     id 'org.springframework.boot'
     id 'io.spring.dependency-management'
+    id 'com.palantir.docker'
 }
 
 dependencies {
@@ -31,4 +32,19 @@ dependencies {
     implementation "org.springframework:spring-test:${springFrameworkVersion}"
     implementation "org.springframework.security:spring-security-config:5.3.3.RELEASE"
     implementation "org.springframework.security:spring-security-web:5.3.9.RELEASE"
+}
+
+task dockerPrepareBuildDir {
+    doLast {
+        copy {
+            from zipTree("build/libs/${project.name}-${version}.jar")
+            into 'build/docker'
+        }
+    }
+    dependsOn(build)
+}
+
+docker {
+    name "${dockerRepositoryName}/${project.name}:${version}"
+    dependsOn(dockerPrepareBuildDir)
 }
