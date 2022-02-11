@@ -44,43 +44,100 @@ services:
       - 80:80
       - 443:443
 
-  tomcat:
-    image: jdrem/tomcat-docker:1.1
-    container_name: weather-app
+  rabbitmq:
+    image: rabbitmq
+    container_name: weather-station-rabbitmq
+    hostname: RABBITMQ
     volumes:
-       - type: bind
-         source: /usr/share/weather-station/tomcat/weather-station-app-1.0-SNAPSHOT.war
-         target: /usr/local/tomcat/webapps/ROOT.war
-       - type: bind
-         source: /usr/share/weather-station/tomcat/server.xml
-         target: /usr/local/tomcat/conf/server.xml
-       - type: bind
-         source: /usr/share/weather-station/tomcat/catalina.policy
-         target: /usr/local/tomcat/conf/catalina.policy
-       - type: bind
-         source: "${HOME}/tomcat/logs"
-         target: /usr/local/tomcat/logs
-       - type: bind
-         source: "${HOME}/secrets/keystore.jks"
-         target: /usr/local/tomcat/conf/keystore.jks
-    environment:
-         WEATHER_DB_URL: jdbc:mysql://DB:3306/weather
-         WEATHER_DB_USER: wuser
-         WEATHER_DB_PASSWORD: DOCKER-SECRET:mysql_user_password
-         REST_USER: restuser
-         REST_PASSWORD: DOCKER-SECRET:rest_user_password
-         REST_ADMIN_USER: restadmin
-         REST_ADMIN_PASSWORD: DOCKER-SECRET:rest_admin_user_password
+      - type: bind
+        source: /usr/share/weather-station/rabbitmq/rabbitmq.conf
+        target: /etc/rabbitmq/rabbitmq.conf
+      - type: bind
+        source: /usr/share/weather-station/rabbitmq/definitions.json
+        target: /etc/rabbitmq/definitions.json
+      - type: bind
+        source: /usr/share/weather-station/rabbitmq/advanced.config
+        target: /etc/rabbitmq/advanced.config
+      - type: bind
+        source: "${HOME}/secrets/rabbitmq-passphrase"
+        target: /etc/rabbitmq/passphrase
+      - type: bind
+        source: "${HOME}/secrets/rootCA.crt"
+        target: /etc/rabbitmq/rootCA.crt
+      - type: bind
+        source: "${HOME}/secrets/rabbitmq.crt"
+        target: /etc/rabbitmq/rabbitmq.crt
+      - type: bind
+        source: "${HOME}/secrets/rabbitmq.key"
+        target: /etc/rabbitmq/rabbitmq.key
     ports:
-       - 8443:8443
+      - 5672:5672
+
+  app:
+    image: remgant/weather-station-app:0.0.1-SNAPSHOT
+    container_name: weather-station-app
+    volumes:
+      - type: bind
+        source: "${HOME}/secrets/ssl.p12"
+        target: /secrets/server.p12
+      - type: bind
+        source: "${HOME}/secrets/truststore.jks"
+        target: /secrets/truststore.jks"
+      - type: bind
+        source: "${HOME}/secrets/weather-station.p12"
+        target: /secrets/weather-updatore.p12
+    environment:
+      WEATHER_DB_URL: jdbc:mysql://DB:3306/weather
+      WEATHER_DB_USER: wuser
+      WEATHER_DB_PASSWORD: DOCKER-SECRET:mysql_user_password
+      RABBITMQ_HOST: RABBITMQ
+      KEYSTORE_PASSWORD: DOCKER-SECRET:keystore_password
+      TRUSTSTORE_PASSWORD: DOCKER-SECRET:truststore_password
+      RABBITMQ_KEYSTORE_PASSWORD: DOCKER-SECRET:rabbitmq_keystore_password
+    ports:
+      - 8099:8099
     secrets:
-      - mysql_root_password
       - mysql_user_password
-      - rest_user_password
-      - rest_admin_user_password
+      - user_names
+      - admin_names
+      - keystore_password
+      - truststore_password
+      - rabbitmq_keystore_password
     depends_on:
       - mysql
-       
+      - rabbitmq
+
+  updater:
+    image: remgant/weather-station-updater:0.0.1-SNAPSHOT
+    container_name: weather-station-updater
+    volumes:
+      - type: bind
+        source: "${HOME}/secrets/server.p12"
+        target: /secrets/server.p12
+      - type: bind
+        source: "${HOME}/secrets/truststore.jks"
+        target: /secrets/truststore.jks"
+      - type: bind
+        source: "${HOME}/secrets/weather-updater.p12"
+        target: /secrets/weather-updatore.p12
+    environment:
+      RABBITMQ_HOST: RABBITMQ
+      USER_NAMES: DOCKER-SECRET:user_names
+      ADMIN_NAMES: DOCKER-SECRET:admin_names
+      KEYSTORE_PASSWORD: DOCKER-SECRET:keystore_password
+      TRUSTSTORE_PASSWORD: DOCKER-SECRET:truststore_password
+      RABBITMQ_KEYSTORE_PASSWORD: DOCKER-SECRET:rabbitmq_keystore_password
+    ports:
+      - 8099:8099
+    secrets:
+      - user_names
+      - admin_names
+      - keystore_password
+      - truststore_password
+      - rabbitmq_keystore_password
+    depends_on:
+      - rabbitmq
+
 secrets:
      mysql_root_password:
         file: "${HOME}/secrets/mysql_root_password"
