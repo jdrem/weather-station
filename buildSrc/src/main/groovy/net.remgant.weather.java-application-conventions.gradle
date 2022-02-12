@@ -34,6 +34,11 @@ task dockerPrepareBuildDir {
             from zipTree("build/libs/${project.name}-${version}.jar")
             into 'build/docker'
         }
+        copy {
+            from project.projectDir
+            include '*.sh'
+            into 'build/docker'
+        }
     }
     dependsOn(build)
 }
