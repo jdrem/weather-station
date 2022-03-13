@@ -1,7 +1,7 @@
 FROM openjdk:17-jdk-alpine
 RUN addgroup -S spring && \
     adduser -S spring -G spring && \
-    RUN apk update && \
+    apk update && \
     apk upgrade && \
     apk add bash
 USER spring:spring

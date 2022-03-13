@@ -34,7 +34,7 @@ task buildRpm(type: Rpm) {
     }
 
     from("${projectDir}/rabbitmq") {
-        addParentsDir = false
+        addParentDirs = false
         into '/usr/share/weather-station/rabbitmq'
     }
 

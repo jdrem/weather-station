@@ -79,13 +79,13 @@ services:
     volumes:
       - type: bind
         source: "${HOME}/secrets/ssl.p12"
-        target: /secrets/server.p12
+        target: /secrets/ssl.p12
       - type: bind
         source: "${HOME}/secrets/truststore.jks"
         target: /secrets/truststore.jks"
       - type: bind
         source: "${HOME}/secrets/weather-station.p12"
-        target: /secrets/weather-updatore.p12
+        target: /secrets/weather-station.p12
     environment:
       WEATHER_DB_URL: jdbc:mysql://DB:3306/weather
       WEATHER_DB_USER: wuser
@@ -95,7 +95,7 @@ services:
       TRUSTSTORE_PASSWORD: DOCKER-SECRET:truststore_password
       RABBITMQ_KEYSTORE_PASSWORD: DOCKER-SECRET:rabbitmq_keystore_password
     ports:
-      - 8099:8099
+      - 8098:8098
     secrets:
       - mysql_user_password
       - user_names
@@ -119,7 +119,7 @@ services:
         target: /secrets/truststore.jks"
       - type: bind
         source: "${HOME}/secrets/weather-updater.p12"
-        target: /secrets/weather-updatore.p12
+        target: /secrets/weather-updater.p12
     environment:
       RABBITMQ_HOST: RABBITMQ
       USER_NAMES: DOCKER-SECRET:user_names
