@@ -6,4 +6,4 @@ CLASSPATH=/app:\
 /app/lib/"*":\
 /secrets
 
-java -cp $CLASSPATH net.remgant.weather.UpdaterApplicatio
+java -cp $CLASSPATH net.remgant.weather.Application
