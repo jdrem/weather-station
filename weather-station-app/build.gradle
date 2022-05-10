@@ -1,12 +1,8 @@
 plugins {
-    id 'net.remgant.weather.java-application-conventions'
+    id 'net.remgant.weather.java-application-db-conventions'
 }
 
 application {
     // Define the main class for the application.
     mainClass = 'net.remgant.weather.Application'
 }
-
-//dependencies {
-//    implementation project(':weather-station-lib')
-//}

@@ -21,19 +21,6 @@ task buildRpm(type: Rpm) {
         addParentDirs = false
         into '/usr/share/weather-station'
     }
-    
-    from("${projectDir}/weather-station-app/target") {
-        addParentDirs = false
-        include 'weather-station-app-*.war'
-        into '/usr/share/weather-station/tomcat'
-    }
-
-    from("${projectDir}/weather-station-app/conf") {
-        addParentDirs = false
-        include 'catalina.policy'
-        include 'server.xml'
-        into '/usr/share/weather-station/tomcat'
-    }
 
     from("$projectDir}/httpd") {
         addParentDirs = false
@@ -44,6 +31,11 @@ task buildRpm(type: Rpm) {
     from("${projectDir}/weather-station/dist/weather-station") {
         addParentDirs = false
         into '/usr/share/weather-station/htdocs'
+    }
+
+    from("${projectDir}/rabbitmq") {
+        addParentDirs = false
+        into '/usr/share/weather-station/rabbitmq'
     }
 
 }
