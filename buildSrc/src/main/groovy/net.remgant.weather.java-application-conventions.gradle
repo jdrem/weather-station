@@ -45,7 +45,7 @@ task dockerPrepareBuildDir {
 
 docker {
     name "${dockerRepositoryName}/${project.name}"
-    tag 'buildVersion',  "${dockerRepositoryName}/${project.name}:${version}"
+    tag 'buildVersion',  "${dockerRepositoryName}/${project.name}:${version}-${buildNumber}"
     tag 'latest', "${dockerRepositoryName}/${project.name}:latest"
     dependsOn(dockerPrepareBuildDir)
 }

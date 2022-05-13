@@ -28,6 +28,7 @@ ext {
     logbackVersion = '1.2.3'
     junitVersion = '4.13.2'
     dockerRepositoryName = 'docker.home.remgant.net:5000/jdremillard'
+    buildNumber = project.properties['buildNumber'] ?: "0"
 }
 
 dependencies {
