@@ -74,7 +74,7 @@ services:
       - 5672:5672
 
   app:
-    image: remgant/weather-station-app:0.0.1-SNAPSHOT
+    image: jdremillard/weather-station-app:latest
     container_name: weather-station-app
     volumes:
       - type: bind
@@ -108,7 +108,7 @@ services:
       - rabbitmq
 
   updater:
-    image: remgant/weather-station-updater:0.0.1-SNAPSHOT
+    image: jdremillard/weather-station-updater:latest
     container_name: weather-station-updater
     volumes:
       - type: bind
@@ -122,8 +122,8 @@ services:
         target: /secrets/weather-updater.p12
     environment:
       RABBITMQ_HOST: RABBITMQ
-      USER_NAMES: DOCKER-SECRET:user_names
-      ADMIN_NAMES: DOCKER-SECRET:admin_names
+      USER_NAMES: DOCKER-SECRET:updater_user_names
+      ADMIN_NAMES: DOCKER-SECRET:updater_admin_names
       KEYSTORE_PASSWORD: DOCKER-SECRET:keystore_password
       TRUSTSTORE_PASSWORD: DOCKER-SECRET:truststore_password
       RABBITMQ_KEYSTORE_PASSWORD: DOCKER-SECRET:rabbitmq_keystore_password
@@ -147,3 +147,8 @@ secrets:
         file: "${HOME}/secrets/rest_user_password"
      rest_admin_user_password:
         file: "${HOME}/secrets/rest_admin_user_password"
+     updater_user_names:
+       file: "${HOME}/secrets/updater_user_names"
+     updater_admin_names:
+       file: "${HOME}/secrets/updater_admin_names"
+
