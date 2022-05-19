@@ -74,7 +74,7 @@ services:
       - 5672:5672
 
   app:
-    image: jdremillard/weather-station-app:latest
+    image: "${DOCKER_HUB}/jdremillard/weather-station-app:latest"
     container_name: weather-station-app
     volumes:
       - type: bind
@@ -106,7 +106,7 @@ services:
       - rabbitmq
 
   updater:
-    image: jdremillard/weather-station-updater:latest
+    image: "${DOCKER_HUB}/jdremillard/weather-station-updater:latest"
     container_name: weather-station-updater
     volumes:
       - type: bind
