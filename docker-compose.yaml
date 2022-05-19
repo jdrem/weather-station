@@ -130,8 +130,8 @@ services:
     ports:
       - 8099:8099
     secrets:
-      - user_names
-      - admin_names
+      - updater_user_names
+      - updater_admin_names
       - keystore_password
       - truststore_password
       - rabbitmq_keystore_password
