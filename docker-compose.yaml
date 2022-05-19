@@ -152,7 +152,7 @@ secrets:
      keystore_password:
        file: "${HOME}/secrets/keystore_password"
      truststore_password:
-       file: "${HOME}/secrets/trustore_password"
+       file: "${HOME}/secrets/truststore_password"
      rabbitmq_keystore_password:
        file: "${HOME}/secrets/rabbitmq_keystore_password"
 
