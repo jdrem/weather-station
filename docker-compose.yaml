@@ -98,8 +98,6 @@ services:
       - 8098:8098
     secrets:
       - mysql_user_password
-      - user_names
-      - admin_names
       - keystore_password
       - truststore_password
       - rabbitmq_keystore_password
