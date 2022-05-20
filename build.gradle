@@ -24,7 +24,7 @@ task buildRpm(type: Rpm) {
 
     from("$projectDir}/httpd") {
         addParentDirs = false
-        include 'httpd/httpd.conf'
+//        include 'httpd/httpd.conf'
         into '/usr/share/weather-station/htconfig'
     }
 

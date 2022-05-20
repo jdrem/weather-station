@@ -29,10 +29,10 @@ services:
     container_name: weather-httpd
     volumes:
       - type: bind
-        source: /usr/share/weather-station/htconfig/httpd.conf
+        source: "${HOME}/weather-station/htconfig/httpd.conf"
         target: /usr/local/apache2/conf/httpd.conf
       - type: bind
-        source: /usr/share/weather-station/htdocs
+        source: "${HOME}/weather-station/htdocs"
         target: /usr/local/apache2/htdocs
       - type: bind
         source: "${HOME}/secrets/fullchain.pem"
@@ -50,13 +50,13 @@ services:
     hostname: RABBITMQ
     volumes:
       - type: bind
-        source: /usr/share/weather-station/rabbitmq/rabbitmq.conf
+        source: "${HOME}/weather-station/rabbitmq/rabbitmq.conf"
         target: /etc/rabbitmq/rabbitmq.conf
       - type: bind
-        source: /usr/share/weather-station/rabbitmq/definitions.json
+        source: "${HOME}/weather-station/rabbitmq/definitions.json"
         target: /etc/rabbitmq/definitions.json
       - type: bind
-        source: /usr/share/weather-station/rabbitmq/advanced.config
+        source: "${HOME}/weather-station/rabbitmq/advanced.config"
         target: /etc/rabbitmq/advanced.config
       - type: bind
         source: "${HOME}/secrets/rabbitmq-passphrase"
