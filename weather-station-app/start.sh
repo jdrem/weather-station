@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source env_secrets_expand.sh
+source /app/bin/env_secrets_expand.sh
 
 CLASSPATH=/app:\
 /app/lib/"*":\
