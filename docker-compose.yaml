@@ -114,7 +114,7 @@ services:
         target: /secrets/server.p12
       - type: bind
         source: "${HOME}/secrets/truststore.jks"
-        target: /secrets/truststore.jks"
+        target: /secrets/truststore.jks
       - type: bind
         source: "${HOME}/secrets/weather-updater.p12"
         target: /secrets/weather-updater.p12

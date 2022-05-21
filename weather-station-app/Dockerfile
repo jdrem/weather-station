@@ -5,9 +5,9 @@ RUN addgroup -S spring && \
     apk upgrade && \
     apk add bash
 USER spring:spring
-COPY BOOT-INF/lib /app/lib
-COPY META-INF /app/META-INF
-COPY BOOT-INF/classes /app
+COPY BOOT-INF/lib /app/lib/
+COPY META-INF /app/META-INF/
+COPY BOOT-INF/classes /app/
 COPY *.sh /app/bin/
 ENV PATH="/app/bin:${PATH}"
 CMD ["start.sh"]
