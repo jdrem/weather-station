@@ -45,7 +45,7 @@ services:
       - 443:443
 
   rabbitmq:
-    image: rabbitmq
+    image: rabbitmq:management
     container_name: weather-station-rabbitmq
     hostname: RABBITMQ
     volumes:
@@ -58,6 +58,9 @@ services:
       - type: bind
         source: "${HOME}/weather-station/rabbitmq/advanced.config"
         target: /etc/rabbitmq/advanced.config
+      - type: bind
+        source: "${HOME}/weather-station/rabbitmq/enabled_plugins"
+        target: /etc/rabbitmq/enabled_plugins
       - type: bind
         source: "${HOME}/secrets/rabbitmq-passphrase"
         target: /etc/rabbitmq/passphrase
