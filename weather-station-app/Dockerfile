@@ -9,5 +9,6 @@ COPY BOOT-INF/lib /app/lib/
 COPY META-INF /app/META-INF/
 COPY BOOT-INF/classes /app/
 COPY *.sh /app/bin/
+RUN mkdir -p /app/log
 ENV PATH="/app/bin:${PATH}"
 CMD ["start.sh"]
