@@ -85,7 +85,7 @@ services:
         target: /secrets/ssl.p12
       - type: bind
         source: "${HOME}/secrets/truststore.jks"
-        target: /secrets/truststore.jks"
+        target: /secrets/truststore.jks
       - type: bind
         source: "${HOME}/secrets/weather-station.p12"
         target: /secrets/weather-station.p12
