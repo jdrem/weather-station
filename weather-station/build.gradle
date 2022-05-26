@@ -2,6 +2,15 @@ plugins {
   id "com.moowork.node" version "1.3.1"
 }
 
-task build {
+task clean(type: Delete) {
+  delete "${project.projectDir}/dist"
+}
+
+task build(type: Exec) {
   dependsOn(npmInstall)
+  if (System.getProperty("os.name").toUpperCase().contains("WINDOWS")) {
+    commandLine "ng.cmd", "build"
+  } else {
+    commandLine "ng", "build"
+  }
 }

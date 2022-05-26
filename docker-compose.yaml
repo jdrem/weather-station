@@ -29,10 +29,10 @@ services:
     container_name: weather-httpd
     volumes:
       - type: bind
-        source: /usr/share/weather-station/htconfig/httpd.conf
+        source: "${HOME}/weather-station/htconfig/httpd.conf"
         target: /usr/local/apache2/conf/httpd.conf
       - type: bind
-        source: /usr/share/weather-station/htdocs
+        source: "${HOME}/weather-station/htdocs"
         target: /usr/local/apache2/htdocs
       - type: bind
         source: "${HOME}/secrets/fullchain.pem"
@@ -43,44 +43,104 @@ services:
     ports:
       - 80:80
       - 443:443
-
-  tomcat:
-    image: jdrem/tomcat-docker:1.1
-    container_name: weather-app
-    volumes:
-       - type: bind
-         source: /usr/share/weather-station/tomcat/weather-station-app-1.0-SNAPSHOT.war
-         target: /usr/local/tomcat/webapps/ROOT.war
-       - type: bind
-         source: /usr/share/weather-station/tomcat/server.xml
-         target: /usr/local/tomcat/conf/server.xml
-       - type: bind
-         source: /usr/share/weather-station/tomcat/catalina.policy
-         target: /usr/local/tomcat/conf/catalina.policy
-       - type: bind
-         source: "${HOME}/tomcat/logs"
-         target: /usr/local/tomcat/logs
-       - type: bind
-         source: "${HOME}/secrets/keystore.jks"
-         target: /usr/local/tomcat/conf/keystore.jks
     environment:
-         WEATHER_DB_URL: jdbc:mysql://DB:3306/weather
-         WEATHER_DB_USER: wuser
-         WEATHER_DB_PASSWORD: DOCKER-SECRET:mysql_user_password
-         REST_USER: restuser
-         REST_PASSWORD: DOCKER-SECRET:rest_user_password
-         REST_ADMIN_USER: restadmin
-         REST_ADMIN_PASSWORD: DOCKER-SECRET:rest_admin_user_password
+      SERVER_NAME: "${SERVER_NAME}"
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: weather-station-rabbitmq
+    hostname: RABBITMQ
+    volumes:
+      - type: bind
+        source: "${HOME}/weather-station/rabbitmq/rabbitmq.conf"
+        target: /etc/rabbitmq/rabbitmq.conf
+      - type: bind
+        source: "${HOME}/weather-station/rabbitmq/definitions.json"
+        target: /etc/rabbitmq/definitions.json
+      - type: bind
+        source: "${HOME}/weather-station/rabbitmq/advanced.config"
+        target: /etc/rabbitmq/advanced.config
+      - type: bind
+        source: "${HOME}/weather-station/rabbitmq/enabled_plugins"
+        target: /etc/rabbitmq/enabled_plugins
+      - type: bind
+        source: "${HOME}/secrets/rabbitmq-passphrase"
+        target: /etc/rabbitmq/passphrase
+      - type: bind
+        source: "${HOME}/secrets/rootCA.crt"
+        target: /etc/rabbitmq/rootCA.crt
+      - type: bind
+        source: "${HOME}/secrets/rabbitmq.crt"
+        target: /etc/rabbitmq/rabbitmq.crt
+      - type: bind
+        source: "${HOME}/secrets/rabbitmq.key"
+        target: /etc/rabbitmq/rabbitmq.key
     ports:
-       - 8443:8443
+      - 5672:5672
+
+  app:
+    image: "${DOCKER_HUB}/jdremillard/weather-station-app:latest"
+    container_name: weather-station-app
+    volumes:
+      - type: bind
+        source: "${HOME}/secrets/ssl.p12"
+        target: /secrets/ssl.p12
+      - type: bind
+        source: "${HOME}/secrets/truststore.jks"
+        target: /secrets/truststore.jks
+      - type: bind
+        source: "${HOME}/secrets/weather-station.p12"
+        target: /secrets/weather-station.p12
+    environment:
+      WEATHER_DB_URL: jdbc:mysql://DB:3306/weather
+      WEATHER_DB_USER: wuser
+      WEATHER_DB_PASSWORD: DOCKER-SECRET:mysql_user_password
+      RABBITMQ_HOST: RABBITMQ
+      KEYSTORE_PASSWORD: DOCKER-SECRET:keystore_password
+      TRUSTSTORE_PASSWORD: DOCKER-SECRET:truststore_password
+      RABBITMQ_KEYSTORE_PASSWORD: DOCKER-SECRET:rabbitmq_keystore_password
+    ports:
+      - 8098:8098
     secrets:
-      - mysql_root_password
       - mysql_user_password
-      - rest_user_password
-      - rest_admin_user_password
+      - keystore_password
+      - truststore_password
+      - rabbitmq_keystore_password
     depends_on:
       - mysql
-       
+      - rabbitmq
+
+  updater:
+    image: "${DOCKER_HUB}/jdremillard/weather-station-updater:latest"
+    container_name: weather-station-updater
+    volumes:
+      - type: bind
+        source: "${HOME}/secrets/server.p12"
+        target: /secrets/server.p12
+      - type: bind
+        source: "${HOME}/secrets/truststore.jks"
+        target: /secrets/truststore.jks
+      - type: bind
+        source: "${HOME}/secrets/weather-updater.p12"
+        target: /secrets/weather-updater.p12
+    environment:
+      RABBITMQ_HOST: RABBITMQ
+      USER_NAMES: DOCKER-SECRET:updater_user_names
+      ADMIN_NAMES: DOCKER-SECRET:updater_admin_names
+      KEYSTORE_PASSWORD: DOCKER-SECRET:keystore_password
+      TRUSTSTORE_PASSWORD: DOCKER-SECRET:truststore_password
+      RABBITMQ_KEYSTORE_PASSWORD: DOCKER-SECRET:rabbitmq_keystore_password
+    ports:
+      - 8099:8099
+    secrets:
+      - updater_user_names
+      - updater_admin_names
+      - keystore_password
+      - truststore_password
+      - rabbitmq_keystore_password
+    depends_on:
+      - rabbitmq
+
 secrets:
      mysql_root_password:
         file: "${HOME}/secrets/mysql_root_password"
@@ -90,3 +150,14 @@ secrets:
         file: "${HOME}/secrets/rest_user_password"
      rest_admin_user_password:
         file: "${HOME}/secrets/rest_admin_user_password"
+     updater_user_names:
+       file: "${HOME}/secrets/updater_user_names"
+     updater_admin_names:
+       file: "${HOME}/secrets/updater_admin_names"
+     keystore_password:
+       file: "${HOME}/secrets/keystore_password"
+     truststore_password:
+       file: "${HOME}/secrets/truststore_password"
+     rabbitmq_keystore_password:
+       file: "${HOME}/secrets/rabbitmq_keystore_password"
+

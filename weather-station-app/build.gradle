@@ -1,5 +1,5 @@
 plugins {
-    id 'net.remgant.weather.java-application-conventions'
+    id 'net.remgant.weather.java-application-db-conventions'
 }
 
 application {
