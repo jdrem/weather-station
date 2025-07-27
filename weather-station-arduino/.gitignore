@@ -1,0 +1,6 @@
+.pio
+.idea
+build
+include/basic_auth.h
+include/wifi_credentials.h
+include/client_cert.h
