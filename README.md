@@ -5,40 +5,86 @@ This is the web and backend code for a weather station something like this [Ardu
 
 ## Configuring Certs for WeatherUploader
 
-### Create CA Certificate
+### Certifcates and Security
 
-Create the certificate authority certificate to sign all other certifificates
+We need these certs set up for the application:
+* An SSL cert and key singed by a legit CA for the webserver and app server (fullchain.pem, privkey.pem)
+* The SSL cert as a PKCS12 key for the app server and place in a keystore (ssl.p12, keystore.jks)
+* A self signed CA cert and key (rootCA.crt, rootCA.key)
+* A trustore with the CA cert and key (trustore.jks)
+* A cert for rabbitmq signed by the self-signed CA (rabbitmq.key)
+* A cert for the updater app (server.p12)
+* Certs signed by the self-signed CA for the app and updated to connect to RabbitMQ (weather-station.p12, weather-updater.p12)
+* Certs signed by the self-signed CA for any clients of the updater (alice.\[crt|p12\], charlie.\[crt|p12\])
+                       
+#### Certificate for public HTTPS 
+
+Get a signed certificate from Lets Encrypt for the servers hostname (or a wild card). Copy over fullchain.pem and privkey.pem. The pem files
+can be directly used by Apache httpd.
+
+We need to create a PKCS12 key from the pem files and make a keystore for the app server: 
+
+```bash
+openssl pkcs12 -export -in fullchain.pem -inkey privkey.pem -out ssl.p12 -name  "*.example.com"
+keytool -importkeystore -destkeystore keystore.jks -srckeystore ssl.p12 -srcstoretype PKCS12
+```
+                       
+#### Certificate Authority for all other certs
+
+Create the certificate authority certificate that we can use to sign all other certifificates.
 
 ```bash
 openssl req -x509 -sha256 -newkey rsa:4096 -keyout rootCA.key -out rootCA.crt
 ```
 
 ### Create Server Certificate
-The certificate for the server. 
+We need self-signed certs for RabbitMQ and the updater app. 
 
-Create the certificate signing request and the private key:
+First, create the certificate signing request and the private key:
 ```bash
-openssl req -new -newkey rsa:4096 -keyout server.key -out server.csr
+openssl req -new -newkey rsa:4096 -keyout rabbitmq.key -out rabbitmq.csr
 ```
-Create a file called localhost.ext with the contents:
+Create a file called rabbitmq.ext for the RabbitMQ service with the contents:
 ```text
 authorityKeyIdentifier=keyid,issuer
 basicConstraints=CA:FALSE
 subjectAltName = @alt_names
 [alt_names]
 DNS.1 = localhost
+DNS.2 = RABBITMQ
 ```
 Sign the CSR with the CA's certificate:
 ```bash
-openssl x509 -req -in server.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateseria
-l -out server.crt -days 365 -sha256 -extfile localhost.ext
+openssl x509 -req -in rabbitmq.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial 
+-out rabbitmq.crt -days 365 -sha256 -extfile rabbitmq.ext
+```
+Now do the same for the updater.
+
+Create csr and key:
+
+```bash
+openssl req -new -newkey rsa:4096 -keyout weather-updater.key -out weather-updater.csr
+```
+Create a file called weather-updater.ext for with the contents:
+```text
+authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+subjectAltName = @alt_names
+[alt_names]
+DNS.1 = localhost
+DNS.2 = *.example.com
+```
+
+Sign the CSR with the CA's certificate:
+```bash
+openssl x509 -req -in rabbitmq.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial 
+-out weather-updater.crt -days 365 -sha256 -extfile weather-updater.ext
 ```
 Create a PKCS12 type certificate from existing PEM certificate:
 ```bash
-openssl pkcs12 -export -out server.p12 -name "localhost" -inkey server.key -in s
-erver.crt
+openssl pkcs12 -export -out weather-updater.p12 -name "localhost" -inkey weather-updater.key -in weather-updater.csr
 ```
-Create a trustore with the CA's key:
+We need a trust store with CA's key. Create a trustore:
 ```bash
 keytool -import -trustcacerts -noprompt -alias ca -ext san=dns:localhost,ip:127.0.01 -file rootCA.crt -keystore truststore.jks
 ````
@@ -152,20 +198,3 @@ add this line:
 ```
 %wheel  ALL=    NOPASSWD: SOFTWARE
 ```
-
-# Start rabbitmq with custom config
-```bash 
-docker run -d --name weather-rabbitmq \
--p 5672:5672 \
--p 15672:15672 \
--v  /home/jdr/Projects/weather-station/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf \
--v /home/jdr/Projects/weather-station/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json \
--v /home/jdr/Projects/weather-station/rabbitmq/advanced.config:/etc/rabbitmq/advanced.config \
--v /home/jdr/Projects/weather-station/rabbitmq/passphrase:/etc/rabbitmq/passphrase \
--v /home/jdr/Projects/weather-station/rootCA.crt:/etc/rabbitmq/rootCA.crt \
--v /home/jdr/Projects/weather-station/rabbitmq.crt:/etc/rabbitmq/rabbitmq.crt \
--v /home/jdr/Projects/weather-station/rabbitmq.key:/etc/rabbitmq/rabbitmq.key \
-rabbitmq:management
-```
-
-
