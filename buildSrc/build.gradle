@@ -15,5 +15,5 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-gradle-plugin:2.6.3'
     implementation 'io.spring.gradle:dependency-management-plugin:1.0.7.RELEASE'
-    implementation 'com.palantir.gradle.docker:gradle-docker:0.32.0'
+    implementation 'com.palantir.gradle.docker:gradle-docker:0.37.0'
 }

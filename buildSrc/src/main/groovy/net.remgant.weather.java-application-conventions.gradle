@@ -43,6 +43,18 @@ task dockerPrepareBuildDir {
     dependsOn(build)
 }
 
+tasks.register('dockerLogin', Exec) {
+    description = 'Login to docker'
+
+    standardInput = new ByteArrayInputStream(dockerRepositoryPassword.bytes)
+
+    commandLine 'docker'
+    args 'login', '--username', dockerRepositoryUserName, '--password-stdin', dockerRepositoryHost
+
+}
+
+dockerPush.dependsOn dockerLogin
+
 docker {
     name "${dockerRepositoryName}/${project.name}"
     tag 'buildVersion',  "${dockerRepositoryName}/${project.name}:${version}-${buildNumber}"

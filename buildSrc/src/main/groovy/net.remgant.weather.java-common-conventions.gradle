@@ -10,7 +10,7 @@ plugins {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
@@ -28,8 +28,12 @@ ext {
     logbackVersion = '1.2.3'
     junitVersion = '4.13.2'
     hibernateVersion = '5.6.4.Final'
-    dockerRepositoryName = 'docker.home.remgant.net:5000/jdremillard'
+    dockerRepositoryName = 'hgcr.io/jdrem'
+    dockerRepositoryHost = 'ghcr.io'
     buildNumber = project.properties['buildNumber'] ?: "0"
+
+    dockerRepositoryUserName = project.properties['dockerRepositoryUserName'] ?: ""
+    dockerRepositoryPassword = project.properties['dockerRepositoryPassword'] ?: ""
 }
 
 dependencies {
