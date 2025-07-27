@@ -1,5 +1,5 @@
 plugins {
-    id 'nebula.rpm' version '8.4.1'
+    id 'com.netflix.nebula.rpm' version '11.8.1'
 }
 
 ext.buildNumber = project.properties['buildNumber'] ?: "0"
