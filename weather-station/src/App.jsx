@@ -23,9 +23,9 @@ function App() {
                 <thead>
                     <tr>
                         <th>Date/Time</th>
-                        <th>Temperature</th>
-                        <th>Humidity</th>
-                        <th>Pressure</th>
+                        <th>Temperature (&#176;F)</th>
+                        <th>Humidity (%)</th>
+                        <th>Pressure (in Hg)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -35,7 +35,7 @@ function App() {
                             {c.timestamp.substring(11,13)}:{c.timestamp.substring(14,16)}:{c.timestamp.substring(17,19)}</td>
                         <td><NumericFormat displayType="text" value={c.tempF} decimalScale={1} /> </td>
                         <td><NumericFormat displayType="text" value={c.humidity} decimalScale={1} /> </td>
-                        <td><NumericFormat displayType="text" value={c.pressure} decimalScale={1} /> </td>
+                        <td><NumericFormat displayType="text" value={c.pressure*2.953e-4} decimalScale={1} /> </td>
                     </tr>
                 ))}
                 </tbody>
