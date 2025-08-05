@@ -14,7 +14,7 @@ function App() {
                 setConditions(resp.data);
             })
             .catch(error => console.error(error))
-    });
+    }, []);
 
     return (
         <>
