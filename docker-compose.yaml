@@ -83,6 +83,9 @@ services:
     container_name: weather-station-app
     volumes:
       - type: bind
+        source: "${HOME}/weather-station/logs"
+        target: /app/log
+      - type: bind
         source: "${HOME}/secrets/ssl.p12"
         target: /secrets/ssl.p12
       - type: bind
@@ -92,6 +95,7 @@ services:
         source: "${HOME}/secrets/weather-station.p12"
         target: /secrets/weather-station.p12
     environment:
+      LOGGING_DIR: /app/log
       WEATHER_DB_URL: jdbc:mysql://DB:3306/weather
       WEATHER_DB_USER: wuser
       WEATHER_DB_PASSWORD: DOCKER-SECRET:mysql_user_password
@@ -115,6 +119,9 @@ services:
     container_name: weather-station-updater
     volumes:
       - type: bind
+        source: "${HOME}/weather-station/logs"
+        target: /app/log
+      - type: bind
         source: "${HOME}/secrets/server.p12"
         target: /secrets/server.p12
       - type: bind
@@ -124,6 +131,7 @@ services:
         source: "${HOME}/secrets/weather-updater.p12"
         target: /secrets/weather-updater.p12
     environment:
+      LOGGING_DIR: /app/log
       RABBITMQ_HOST: RABBITMQ
       USER_NAMES: DOCKER-SECRET:updater_user_names
       ADMIN_NAMES: DOCKER-SECRET:updater_admin_names

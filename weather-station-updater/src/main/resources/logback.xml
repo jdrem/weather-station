@@ -1,5 +1,7 @@
 <configuration>
 
+    <contextListener class="net.remgant.weather.logging.LoggerStartupListener"/>
+
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <!-- encoders are assigned the type
              ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
@@ -8,15 +10,29 @@
         </encoder>
     </appender>
 
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGGING_DIR}/weather-station-updater.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>weather-station-updater.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>10GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{YYYY-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} %method:%line - %msg%n</pattern>
+        </encoder>
+    </appender>
+
     <logger name="org.apache.http" level="OFF"/>
     <logger name="com.amazonaws.http.conn.ssl" level="OFF"/>
     <logger name="org.hibernate" level="OFF"/>
     <logger name="org.springframework" level="INFO"/>
     <logger name="com.zaxxer.hikari" level="WARN"/>
-<!--    <logger name="org.springframework.security" level="DEBUG"/>-->
+    <!--    <logger name="org.springframework.security" level="DEBUG"/>-->
 
 
     <root level="debug">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
     </root>
 </configuration>
