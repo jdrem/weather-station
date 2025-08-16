@@ -1,0 +1,9 @@
+plugins {
+    id 'net.remgant.weather.java-application-db-conventions'
+}
+
+dependencies {
+    implementation 'io.github.openfeign:feign-core:13.1'
+    implementation 'io.github.openfeign:feign-jackson:13.1'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.14'
+}
